@@ -14,22 +14,29 @@ contacts = {}
 
 @input_error
 def add_contact(args):
+    if len(args) < 2:
+        raise ValueError
     name, phone = args
     contacts[name] = phone
     return "Contact added."
 
 @input_error
 def get_phone(args):
+    if len(args) < 1:
+        raise IndexError
     name = args[0]
     return contacts[name]
 
 @input_error
 def show_all(args):
+    if not contacts:
+        return "No contacts saved."
     return "\n".join([f"{name}: {phone}" for name, phone in contacts.items()])
 
 def main():
     while True:
         command = input("Enter a command: ").strip().lower()
+        
         if command == "exit":
             print("Goodbye!")
             break

@@ -1,17 +1,16 @@
 import re
-from typing import Callable, Generator
+from typing import Generator, Callable
 
 def generator_numbers(text: str) -> Generator[float, None, None]:
     """
-    Генерує всі дійсні числа, які відокремлені пробілами у вхідному тексті.
+    Генерує всі дійсні числа з переданого тексту.
     """
-    pattern = r' (?P<number>\d+\.\d+) '
-    for match in re.finditer(pattern, f' {text} '):  # Додаємо пробіли на краях
-        yield float(match.group('number'))
+    for match in re.finditer(r'(?<= )\d+\.\d+(?= )', text):
+        yield float(match.group())
 
 def sum_profit(text: str, func: Callable[[str], Generator[float, None, None]]) -> float:
     """
-    Обчислює загальний прибуток, підсумовуючи всі числа з генератора.
+    Обчислює загальну суму всіх дійсних чисел у тексті, використовуючи функцію-генератор.
     """
     return sum(func(text))
 
