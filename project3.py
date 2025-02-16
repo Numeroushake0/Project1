@@ -7,49 +7,74 @@ def input_error(func):
         except ValueError:
             return "Give me name and phone please."
         except IndexError:
-            return "Invalid command format."
+            return "Enter the argument for the command."
     return inner
 
-contacts = {}
+
+def parse_input(user_input):
+    cmd, *args = user_input.split()
+    cmd = cmd.strip().lower()
+    return cmd, args
+
 
 @input_error
-def add_contact(args):
-    if len(args) < 2:
+def add_contact(args, contacts):
+    if len(args) != 2:
         raise ValueError
     name, phone = args
     contacts[name] = phone
     return "Contact added."
 
+
 @input_error
-def get_phone(args):
-    if len(args) < 1:
-        raise IndexError
+def change_contact(args, contacts):
+    if len(args) != 2:
+        raise ValueError
+    name, phone = args
+    if name not in contacts:
+        raise KeyError
+    contacts[name] = phone
+    return "Number updated."
+
+
+@input_error
+def show_phone(args, contacts):
+    if len(args) != 1:
+        raise ValueError
     name = args[0]
     return contacts[name]
 
+
 @input_error
-def show_all(args):
+def show_all(contacts):
     if not contacts:
-        return "No contacts saved."
-    return "\n".join([f"{name}: {phone}" for name, phone in contacts.items()])
+        return "The contact list is empty."
+    return "\n".join(f"{name}: {phone}" for name, phone in contacts.items())
+
 
 def main():
+    contacts = {}
+    print("How can I help you?")
     while True:
-        command = input("Enter a command: ").strip().lower()
-        
-        if command == "exit":
-            print("Goodbye!")
+        user_input = input("Enter your command: ")
+        command, args = parse_input(user_input)
+
+        if command in ["close", "exit"]:
+            print("Thank you for using the bot! Goodbye!")
             break
-        elif command.startswith("add"):
-            args = command.split()[1:]
-            print(add_contact(args))
-        elif command.startswith("phone"):
-            args = command.split()[1:]
-            print(get_phone(args))
+        elif command == "hello":
+            print("How can I help you?")
+        elif command == "add":
+            print(add_contact(args, contacts))
+        elif command == "change":
+            print(change_contact(args, contacts))
+        elif command == "phone":
+            print(show_phone(args, contacts))
         elif command == "all":
-            print(show_all([]))
+            print(show_all(contacts))
         else:
-            print("Unknown command. Try again.")
+            print("Unknown command. Use one of the following commands: add, change, phone, all, close, exit.")
+
 
 if __name__ == "__main__":
     main()

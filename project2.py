@@ -3,14 +3,22 @@ from typing import Generator, Callable
 
 def generator_numbers(text: str) -> Generator[float, None, None]:
     """
-    Генерує всі дійсні числа з переданого тексту.
+    Генерує всі дійсні числа з тексту.
+    
+    :param text: Вхідний рядок
+    :yield: Дійсні числа у вигляді float
     """
-    for match in re.finditer(r'(?<= )\d+\.\d+(?= )', text):
-        yield float(match.group())
+    pattern = r' (?P<number>\d+\.\d+) '
+    for match in re.finditer(pattern, text):
+        yield float(match.group("number"))
 
 def sum_profit(text: str, func: Callable[[str], Generator[float, None, None]]) -> float:
     """
-    Обчислює загальну суму всіх дійсних чисел у тексті, використовуючи функцію-генератор.
+    Обчислює загальний прибуток, підсумовуючи всі дійсні числа з тексту.
+    
+    :param text: Вхідний рядок
+    :param func: Функція-генератор чисел з тексту
+    :return: Загальна сума прибутку
     """
     return sum(func(text))
 
