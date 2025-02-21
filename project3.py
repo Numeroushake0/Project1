@@ -13,43 +13,32 @@ def input_error(func):
 
 def parse_input(user_input):
     cmd, *args = user_input.split()
-    cmd = cmd.strip().lower()
-    return cmd, args
+    return cmd.strip().lower(), args
 
 
 @input_error
 def add_contact(args, contacts):
-    if len(args) != 2:
-        raise ValueError
-    name, phone = args
+    name, phone = args  
     contacts[name] = phone
     return "Contact added."
 
 
 @input_error
 def change_contact(args, contacts):
-    if len(args) != 2:
-        raise ValueError
     name, phone = args
-    if name not in contacts:
-        raise KeyError
-    contacts[name] = phone
+    contacts[name] = phone  
     return "Number updated."
 
 
 @input_error
 def show_phone(args, contacts):
-    if len(args) != 1:
-        raise ValueError
-    name = args[0]
-    return contacts[name]
+    name = args[0]  
+    return contacts[name]  
 
 
 @input_error
 def show_all(contacts):
-    if not contacts:
-        return "The contact list is empty."
-    return "\n".join(f"{name}: {phone}" for name, phone in contacts.items())
+    return "\n".join(f"{name}: {phone}" for name, phone in contacts.items()) or "The contact list is empty."
 
 
 def main():
